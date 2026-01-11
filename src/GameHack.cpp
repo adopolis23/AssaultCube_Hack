@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "src/process.h"
+#include "process.h"
 
 int main()
 {

@@ -1,5 +1,5 @@
 workspace "ParticleSimulation"
-    architecture "x86_64"
+    architecture "x86"
     configurations { "Debug", "Release" }
 
 
@@ -18,6 +18,7 @@ project "AssaultCube_Hack"
 
     includedirs {
         "src",
+        "src/proc"
     }
 
     filter "configurations:Debug"
