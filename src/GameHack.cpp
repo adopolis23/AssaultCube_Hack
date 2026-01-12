@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "process.h"
+#include "mem.h"
 
 int main()
 {
@@ -29,7 +30,7 @@ int main()
 
 
 
-	bool bAmmoRifle = false, bHealth = false;
+	bool bAmmoRifle = false, bHealth = false, bRecoil = false;
 	bool running = true;
 
 	while (running)
@@ -54,6 +55,17 @@ int main()
 		{
 			bHealth = !bHealth;
 			printf("Turning health hack %s\n", bHealth ? "on" : "off");
+		}
+
+		if (GetAsyncKeyState(VK_F3) & 1) // exit hack
+		{
+			bRecoil = !bRecoil;
+			printf("Turning recoil hack %s\n", bRecoil ? "on" : "off");
+
+			if (bRecoil)
+			{
+				mem::PatchExternal((BYTE*)(moduleBase + 0xC8BA0), (BYTE*) "\xC2\x08\x00", 3, hProcess); // nop out recoil function call
+			}
 		}
 
 

@@ -19,7 +19,8 @@ project "AssaultCube_Hack"
 
     includedirs {
         "src",
-        "src/proc"
+        "src/proc",
+        "src/mem"
     }
 
     filter "configurations:Debug"
