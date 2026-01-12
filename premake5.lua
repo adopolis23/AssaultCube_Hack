@@ -1,4 +1,4 @@
-workspace "ParticleSimulation"
+workspace "AssaultCube_Hack"
     architecture "x86"
     configurations { "Debug", "Release" }
 
@@ -14,6 +14,7 @@ project "AssaultCube_Hack"
     files {
         "src/**.h",
         "src/**.cpp",
+        "*.lua"
     }
 
     includedirs {
