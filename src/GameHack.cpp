@@ -64,7 +64,11 @@ int main()
 
 			if (bRecoil)
 			{
-				mem::PatchExternal((BYTE*)(moduleBase + 0xC8BA0), (BYTE*) "\xC2\x08\x00", 3, hProcess); // nop out recoil function call
+				mem::PatchExternal((BYTE*)(moduleBase + 0xC8BA0), (BYTE*)"\xC2\x08\x00", 3, hProcess); // switch top of recoil function to ret 08 00
+			}
+			else
+			{
+				mem::PatchExternal((BYTE*)(moduleBase + 0xC8BA0), (BYTE*)"\x83\xEC\x28", 3, hProcess); // switch recoil function call back
 			}
 		}
 
