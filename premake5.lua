@@ -3,8 +3,8 @@ workspace "AssaultCube_Hack"
     configurations { "Debug", "Release" }
 
 
-project "AssaultCube_Hack"
-    kind "ConsoleApp"
+project "AssaultCube_Hack_DLL"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++23"
 

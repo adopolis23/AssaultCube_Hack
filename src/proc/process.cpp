@@ -77,19 +77,3 @@ uintptr_t GetModuleBaseAddress(DWORD processId, const wchar_t* moduleName)
 
 	return moduleBaseAddress;
 }
-
-uintptr_t FindDMAAddress(HANDLE hProc, uintptr_t ptr, std::vector<unsigned int> offsets)
-{
-	
-	uintptr_t address = ptr;
-	for (unsigned int offset : offsets)
-	{
-		if (!ReadProcessMemory(hProc, (LPCVOID)address, &address, sizeof(address), nullptr))
-		{
-			return 0;
-		}
-		address += offset;
-	}
-
-	return address;
-}
