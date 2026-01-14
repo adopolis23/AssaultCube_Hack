@@ -11,6 +11,11 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	FILE* f;
 	freopen_s(&f, "CONOUT$", "w", stdout);
 
+	if (!f)
+	{
+		return 1; // error
+	}
+
 	PrintProcessList();
 
 	DWORD pid = GetProcessIdByName(L"ac_client.exe");

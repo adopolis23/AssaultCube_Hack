@@ -5,3 +5,5 @@
 *.user
 bin
 bin-int
+*.tlog
+obj

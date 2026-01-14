@@ -1,61 +1,35 @@
 workspace "AssaultCube_Hack"
-    architecture "x86"
-    configurations { "Debug", "Release" }
+   architecture "x86"
+   configurations { "Debug", "Release" }
+   startproject "DLLInjector"
+
+-- DLL Injector project
+project "DLLInjector"
+   kind "ConsoleApp"
+   language "C++"
+   targetdir "bin/%{cfg.buildcfg}"
+
+   targetdir "bin/%{cfg.buildcfg}"
+   objdir "bin-int/%{cfg.buildcfg}"
 
 
+   -- Include files from DLLInjector folder
+   files { "DLLInjector/**.cpp", "DLLInjector/**.h" }
+
+   -- Include directories if needed
+   includedirs { "DLLInjector" }
+
+-- AssaultCube Hack DLL project
 project "AssaultCube_Hack_DLL"
-    kind "SharedLib"
-    language "C++"
-    cppdialect "C++23"
+   kind "SharedLib"   -- DLL
+   language "C++"
+   targetdir "bin/%{cfg.buildcfg}"
 
-    targetdir "bin/%{cfg.buildcfg}"
-    objdir "bin-int/%{cfg.buildcfg}"
+   targetdir "bin/%{cfg.buildcfg}"
+   objdir "bin-int/%{cfg.buildcfg}"
 
-    files {
-        "AssaultCube_Hack_DLL/src/**.h",
-        "AssaultCube_Hack_DLL/src/**.cpp",
-        "AssaultCube_Hack_DLL/**.cpp",
-        "*.lua"
-    }
+   -- Include files from AssaultCube_Hack_DLL folder
+   files { "AssaultCube_Hack_DLL/**.cpp", "AssaultCube_Hack_DLL/**.h" }
 
-    includedirs {
-        "AssaultCube_Hack_DLL/src",
-        "AssaultCube_Hack_DLL/src/proc",
-        "AssaultCube_Hack_DLL/src/mem"
-    }
-
-    removefiles { "DLLInjector**" }
-
-    filter "configurations:Debug"
-        defines { "DEBUG" }
-        symbols "On"
-
-    filter "configurations:Release"
-        defines { "NDEBUG" }
-        optimize "On"
-
-
-project "DLL_Injector"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++23"
-
-    targetdir "bin/%{cfg.buildcfg}"
-    objdir "bin-int/%{cfg.buildcfg}"
-
-    files {
-        "DLLInjector/src/**.h",
-        "DLLInjector/src/**.cpp",
-    }
-
-    includedirs {
-        "DLLInjector/src",
-    }
-
-    filter "configurations:Debug"
-        defines { "DEBUG" }
-        symbols "On"
-
-    filter "configurations:Release"
-        defines { "NDEBUG" }
-        optimize "On"
+   -- Include directories if needed
+   includedirs { "AssaultCube_Hack_DLL", "AssaultCube_Hack_DLL/src/mem", "AssaultCube_Hack_DLL/src/proc" }
