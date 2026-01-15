@@ -32,4 +32,4 @@ project "AssaultCube_Hack_DLL"
    files { "AssaultCube_Hack_DLL/**.cpp", "AssaultCube_Hack_DLL/**.h" }
 
    -- Include directories if needed
-   includedirs { "AssaultCube_Hack_DLL", "AssaultCube_Hack_DLL/src/mem", "AssaultCube_Hack_DLL/src/proc" }
+   includedirs { "AssaultCube_Hack_DLL", "AssaultCube_Hack_DLL/src/mem", "AssaultCube_Hack_DLL/src/proc", "AssaultCube_Hack_DLL/src/include" }

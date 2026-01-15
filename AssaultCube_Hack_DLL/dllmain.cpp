@@ -3,6 +3,7 @@
 #include <iostream>
 #include "process.h"
 #include "mem.h"
+#include "gameDefines.h"
 
 DWORD WINAPI HackThread(HMODULE hModule)
 {
@@ -18,13 +19,15 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	PrintProcessList();
 
-	DWORD pid = GetProcessIdByName(L"ac_client.exe");
 
+	DWORD pid = GetProcessIdByName(L"ac_client.exe");
 	uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
 
 	// get handle to process (requires admin)
 	HANDLE hProcess = 0;
 	hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+
+
 
 	// find the ammo address in this instance of the game
 	uintptr_t dynamicPtrBaseAddrAmmoAr = moduleBase + 0x00183828;
@@ -32,13 +35,9 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	uintptr_t ammoAddr = mem::FindDMAAddressInternal(dynamicPtrBaseAddrAmmoAr, ammoOffsets);
 
 
-	// find the health address in this instance of the game
 	// this address is base address of the player object
-	uintptr_t dynamicPtrBaseAddrHealth = moduleBase + 0x0017E0A8;
-	std::vector<unsigned int> healthOffsets = { 0xEC };
-	uintptr_t healthAddr = mem::FindDMAAddressInternal(dynamicPtrBaseAddrHealth, healthOffsets);
-
-
+	uintptr_t playerBaseAddress = moduleBase + 0x0017E0A8;
+	PlayerEnt* localPlayer = *(PlayerEnt**)(playerBaseAddress);
 
 
 	bool bAmmoRifle = false, bHealth = false, bRecoil = false;
@@ -89,18 +88,13 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 		if (bAmmoRifle)
 		{
-			int newAmmoValue = 20;
-			//WriteProcessMemory(hProcess, (BYTE*)ammoAddr, &newAmmoValue, sizeof(newAmmoValue), 0);
 
-			*(int*)ammoAddr = newAmmoValue;
+			localPlayer->currWeaponPtr->clip->ammo = 999;
 		}
 
 		if (bHealth)
 		{
-			int newHealthValue = 999;
-			//WriteProcessMemory(hProcess, (BYTE*)healthAddr, &newHealthValue, sizeof(newHealthValue), 0);
-
-			*(int*)healthAddr = newHealthValue;
+			localPlayer->Health = 999;
 		}
 
 		Sleep(20);
