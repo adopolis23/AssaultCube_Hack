@@ -38,7 +38,10 @@ public:
 	char pad_0010[24]; //0x0010
 	Vector3 bodyPos; //0x0028
 	Vector2 camAngle; //0x0034
-	char pad_003C[176]; //0x003C
+	char pad_003C[58]; //0x003C
+	int8_t NoClip; //0x0076
+	int8_t Invis; //0x0077
+	char pad_0078[116]; //0x0078
 	int32_t Health; //0x00EC
 	int32_t Armor; //0x00F0
 	char pad_00F4[273]; //0x00F4

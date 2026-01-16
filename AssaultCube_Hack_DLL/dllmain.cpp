@@ -17,7 +17,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 		return 1; // error
 	}
 
-	PrintProcessList();
+	//PrintProcessList();
 
 
 	DWORD pid = GetProcessIdByName(L"ac_client.exe");
@@ -40,8 +40,13 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	PlayerEnt* localPlayer = *(PlayerEnt**)(playerBaseAddress);
 
 
-	bool bAmmoRifle = false, bHealth = false, bRecoil = false;
+	bool bAmmoRifle = false, bHealth = false, bRecoil = false, bNoClip = false;
 	bool running = true;
+
+	printf("Rifle Ammo Hack -> F1\n");
+	printf("Health Hack -> F2\n");
+	printf("Recoil Hack -> F3\n");
+	printf("NoClip Hack -> F4\n");
 
 	while (running)
 	{
@@ -67,7 +72,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 			printf("Turning health hack %s\n", bHealth ? "on" : "off");
 		}
 
-		if (GetAsyncKeyState(VK_F3) & 1) // exit hack
+		if (GetAsyncKeyState(VK_F3) & 1)
 		{
 			bRecoil = !bRecoil;
 			printf("Turning recoil hack %s\n", bRecoil ? "on" : "off");
@@ -79,6 +84,19 @@ DWORD WINAPI HackThread(HMODULE hModule)
 			else
 			{
 				mem::PatchInternal((BYTE*)(moduleBase + 0xC8BA0), (BYTE*)"\x83\xEC\x28", 3); // switch recoil function call back
+			}
+		}
+
+		if (GetAsyncKeyState(VK_F4) & 1) 
+		{
+			bNoClip = !bNoClip;
+			if (bNoClip)
+			{
+				localPlayer->NoClip = 4;
+			}
+			else
+			{
+				localPlayer->NoClip = 0;
 			}
 		}
 
