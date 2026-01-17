@@ -3,6 +3,7 @@
 #include <iostream>
 #include "process.h"
 #include "mem.h"
+#include "hook.h"
 #include "gameDefines.h"
 
 
@@ -38,7 +39,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	//PrintProcessList();
 
 	owglSwapBuffers = (twglSwapBuffers)GetProcAddress(GetModuleHandleA("opengl32.dll"), "wglSwapBuffers");
-	owglSwapBuffers = (twglSwapBuffers)mem::TrampHook32((BYTE*)owglSwapBuffers, (BYTE*)hkwglSwapBuffers, 5);
+	owglSwapBuffers = (twglSwapBuffers)hook::TrampHook32((BYTE*)owglSwapBuffers, (BYTE*)hkwglSwapBuffers, 5);
 
 	DWORD pid = GetProcessIdByName(L"ac_client.exe");
 	uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
