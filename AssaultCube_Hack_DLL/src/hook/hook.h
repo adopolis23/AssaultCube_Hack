@@ -5,14 +5,14 @@
 
 namespace hook
 {
-	bool Detour32(BYTE* src, BYTE* dst, const uintptr_t len);
-	BYTE* TrampHook32(BYTE* src, BYTE* dst, const uintptr_t len);
+	bool Detour32(BYTE* originalFunction, BYTE* newFunction, const uintptr_t len);
+	BYTE* TrampHook32(BYTE* originalFunction, BYTE* newFunction, const uintptr_t len);
 
 	struct Hook
 	{
 
-		Hook(BYTE* src, BYTE* dst, BYTE* gatewayPtr, uintptr_t len);
-		Hook(const char* exportName, const char* modName, BYTE* dst, BYTE* gatewayPtr, uintptr_t len);
+		Hook(BYTE* originalFunction, BYTE* newFunction, BYTE* gatewayPtr, uintptr_t len);
+		Hook(const char* exportName, const char* modName, BYTE* newFunction, BYTE* gatewayPtr, uintptr_t len);
 
 		void Enable();
 		void Disable();
@@ -23,12 +23,12 @@ namespace hook
 
 		bool bStatus{ false };
 
-		BYTE* src{ nullptr };
-		BYTE* dst{ nullptr };
+		BYTE* originalFunction{ nullptr };
+		BYTE* newFunction{ nullptr };
 		BYTE* gatewayPtr{ nullptr };
 		int len{ 0 };
 
-		BYTE* originalBytes[10]{ 0 };
+		BYTE originalBytes[10]{ 0 };
 
 
 	};
