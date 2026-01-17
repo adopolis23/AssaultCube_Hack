@@ -5,6 +5,24 @@
 #include "mem.h"
 #include "gameDefines.h"
 
+
+
+//create template function type for wglSwapBuffers function
+typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
+
+//create a pointer to the original wglSwapBuffers function
+twglSwapBuffers owglSwapBuffers;
+
+BOOL __stdcall hkwglSwapBuffers(HDC hDc)
+{
+	printf("Hooked\n");
+
+	//call original function
+	return owglSwapBuffers(hDc);
+}
+
+
+
 DWORD WINAPI HackThread(HMODULE hModule)
 {
 	//create console
@@ -19,6 +37,8 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	//PrintProcessList();
 
+	owglSwapBuffers = (twglSwapBuffers)GetProcAddress(GetModuleHandleA("opengl32.dll"), "wglSwapBuffers");
+	owglSwapBuffers = (twglSwapBuffers)mem::TrampHook32((BYTE*)owglSwapBuffers, (BYTE*)hkwglSwapBuffers, 5);
 
 	DWORD pid = GetProcessIdByName(L"ac_client.exe");
 	uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
@@ -40,13 +60,14 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	PlayerEnt* localPlayer = *(PlayerEnt**)(playerBaseAddress);
 
 
-	bool bAmmoRifle = false, bHealth = false, bRecoil = false, bNoClip = false;
+	bool bAmmoRifle = false, bHealth = false, bRecoil = false, bNoClip = false, bInvis = false;
 	bool running = true;
 
 	printf("Rifle Ammo Hack -> F1\n");
 	printf("Health Hack -> F2\n");
 	printf("Recoil Hack -> F3\n");
 	printf("NoClip Hack -> F4\n");
+	printf("Invis Hack -> F5\n");
 
 	while (running)
 	{
@@ -97,6 +118,19 @@ DWORD WINAPI HackThread(HMODULE hModule)
 			else
 			{
 				localPlayer->NoClip = 0;
+			}
+		}
+
+		if (GetAsyncKeyState(VK_F5) & 1)
+		{
+			bInvis = !bInvis;
+			if (bInvis)
+			{
+				localPlayer->Invis = 1;
+			}
+			else
+			{
+				localPlayer->Invis = 0;
 			}
 		}
 

@@ -17,4 +17,7 @@ namespace mem
 	void NopInternal (BYTE* dst, unsigned int size);
 	uintptr_t FindDMAAddressInternal(uintptr_t ptr, std::vector<unsigned int> offsets);
 
+	bool Detour32(BYTE* src, BYTE* dst, const uintptr_t len);
+	BYTE* TrampHook32(BYTE* src, BYTE* dst, const uintptr_t len);
+
 }
