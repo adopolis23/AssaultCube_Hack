@@ -5,21 +5,52 @@
 #include "mem.h"
 #include "hook.h"
 #include "gameDefines.h"
-
+#include "glText.h"
+#include "glDraw.h"
 
 
 //create template function type for wglSwapBuffers function
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 
 //create a pointer to the original wglSwapBuffers function
-twglSwapBuffers owglSwapBuffers;
+twglSwapBuffers wglSwapBuffersGateway;
 
+GL::Font espFont;
+const int espFontHeight = 15;
+const int espFontWidth = 9;
+
+const char* example = "ESP Box";
+
+void Draw()
+{
+	HDC currentHDC = wglGetCurrentDC();
+
+	if (!espFont.bBuilt || currentHDC != espFont.hdc)
+	{
+		espFont.Build(espFontHeight);
+	}
+
+	GL::SetupOrtho();
+
+	GL::DrawOutlinedRect(300, 300, 100, 200, 2.0f, RGB::red);
+
+	float textX = espFont.CenterText(300.0f, 100.0f, espFontWidth * strlen(example));
+	float textY = 300.0f - espFontHeight;
+
+	espFont.Print(textX, textY, RGB::green, "%s", example);
+
+	GL::RestoreGL();
+}
+
+//hooked wglSwapBuffers function
 BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 {
-	printf("Hooked\n");
+	//printf("Hooked\n");
+
+	Draw();
 
 	//call original function
-	return owglSwapBuffers(hDc);
+	return wglSwapBuffersGateway(hDc);
 }
 
 
@@ -36,25 +67,15 @@ DWORD WINAPI HackThread(HMODULE hModule)
 		return 1; // error
 	}
 
-	//PrintProcessList();
 
-	owglSwapBuffers = (twglSwapBuffers)GetProcAddress(GetModuleHandleA("opengl32.dll"), "wglSwapBuffers");
-	owglSwapBuffers = (twglSwapBuffers)hook::TrampHook32((BYTE*)owglSwapBuffers, (BYTE*)hkwglSwapBuffers, 5);
+
+	hook::Hook SwapBufferHook((BYTE*)GetProcAddress(GetModuleHandleA("opengl32.dll"), "wglSwapBuffers"), (BYTE*)hkwglSwapBuffers, (BYTE*)&wglSwapBuffersGateway, 5);
+	SwapBufferHook.Enable();
+
+
 
 	DWORD pid = GetProcessIdByName(L"ac_client.exe");
 	uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
-
-	// get handle to process (requires admin)
-	HANDLE hProcess = 0;
-	hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-
-
-
-	// find the ammo address in this instance of the game
-	uintptr_t dynamicPtrBaseAddrAmmoAr = moduleBase + 0x00183828;
-	std::vector<unsigned int> ammoOffsets = { 0x8, 0x1C0, 0x324 };
-	uintptr_t ammoAddr = mem::FindDMAAddressInternal(dynamicPtrBaseAddrAmmoAr, ammoOffsets);
-
 
 	// this address is base address of the player object
 	uintptr_t playerBaseAddress = moduleBase + 0x0017E0A8;
@@ -73,14 +94,6 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	while (running)
 	{
 
-		DWORD exitCode = 0;
-		if (!GetExitCodeProcess(hProcess, &exitCode))
-			running = false; // error or invalid handle
-
-		if (exitCode != STILL_ACTIVE)
-		{
-			running = false; // process has exited
-		}
 
 		if (GetAsyncKeyState(VK_F1) & 1) // toggle ammo rifle hack
 		{
@@ -122,21 +135,10 @@ DWORD WINAPI HackThread(HMODULE hModule)
 			}
 		}
 
-		if (GetAsyncKeyState(VK_F5) & 1)
+		if (GetAsyncKeyState(VK_DELETE) & 1)
 		{
-			bInvis = !bInvis;
-			if (bInvis)
-			{
-				localPlayer->Invis = 1;
-			}
-			else
-			{
-				localPlayer->Invis = 0;
-			}
+			running = !running;
 		}
-
-
-
 
 
 		if (bAmmoRifle)
