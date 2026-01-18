@@ -1,20 +1,8 @@
 #pragma once
 #include <cstdint>
+#include "geometry.h"
 
 // class defines from reclass based on structure of memory at runtime
-
-struct Vector3
-{
-	float x;
-	float y;
-	float z;
-};
-
-struct Vector2
-{
-	float x;
-	float y;
-};
 
 class clip
 {
@@ -61,4 +49,7 @@ public:
 	virtual void Function9();
 }; //Size: 0x0D68
 
-
+struct entList
+{
+	PlayerEnt* ents[31];
+};
