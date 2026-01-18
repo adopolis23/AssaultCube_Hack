@@ -1,20 +1,39 @@
 #pragma once
 
-struct Vector4 : Vector3
-{
-	float w;
-};
-
-struct Vector3 : Vector2
-{
-	float z;
-};
+#include <cmath>
 
 struct Vector2
 {
 	float x;
 	float y;
+
+	inline float Distance(const Vector2& other) const
+	{
+		float dx = x - other.x;
+		float dy = y - other.y;
+		return std::sqrt(dx * dx + dy * dy);
+	}
 };
+
+
+struct Vector3 : Vector2
+{
+	float z;
+
+	inline float Distance(const Vector3& other) const
+	{
+		float dx = x - other.x;
+		float dy = y - other.y;
+		float dz = z - other.z;
+		return std::sqrt(dx * dx + dy * dy + dz * dz);
+	}
+};
+
+struct Vector4 : Vector3
+{
+	float w;
+};
+
 
 // using definitions
 using vec4 = Vector4;
@@ -23,7 +42,7 @@ using vec2 = Vector2;
 using vec = Vector4;
 
 
-bool WorldToScreen(const vec3 pos, vec3 screen, float matrix[16], int windowWidth, int windowHeight)
+inline bool WorldToScreen(const vec3 pos, vec3& screen, float matrix[16], int windowWidth, int windowHeight)
 {
 	vec4 clipCoords;
 
@@ -43,4 +62,6 @@ bool WorldToScreen(const vec3 pos, vec3 screen, float matrix[16], int windowWidt
 
 	screen.x = (windowWidth / 2 * NDC.x) + (NDC.x + windowWidth / 2);
 	screen.y = -(windowHeight / 2 * NDC.y) + (NDC.y + windowHeight / 2);
+
+	return true;
 }

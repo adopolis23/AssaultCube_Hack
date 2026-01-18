@@ -19,7 +19,6 @@ GL::Font espFont;
 const int espFontHeight = 15;
 const int espFontWidth = 9;
 
-const char* example = "ESP Box";
 
 void Draw()
 {
@@ -31,13 +30,6 @@ void Draw()
 	}
 
 	GL::SetupOrtho();
-
-	GL::DrawOutlinedRect(300, 300, 100, 200, 2.0f, RGB::red);
-
-	float textX = espFont.CenterText(300.0f, 100.0f, espFontWidth * strlen(example));
-	float textY = 300.0f - espFontHeight;
-
-	espFont.Print(textX, textY, RGB::green, "%s", example);
 
 	GL::RestoreGL();
 }
@@ -79,7 +71,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	// this address is base address of the player object
 	uintptr_t playerBaseAddress = moduleBase + 0x0017E0A8;
-	PlayerEnt* localPlayer = *(PlayerEnt**)(playerBaseAddress);
+	Entity* localPlayer = *(Entity**)(playerBaseAddress);
 
 
 	bool bAmmoRifle = false, bHealth = false, bRecoil = false, bNoClip = false, bInvis = false;

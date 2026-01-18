@@ -19,7 +19,7 @@ public:
 	char pad_0018[1064]; //0x0018
 }; //Size: 0x0440
 
-class PlayerEnt
+class Entity
 {
 public:
 	Vector3 headPos; //0x0004
@@ -49,7 +49,7 @@ public:
 	virtual void Function9();
 }; //Size: 0x0D68
 
-struct entList
+struct EntityList
 {
-	PlayerEnt* ents[31];
+	Entity* ents[31];
 };

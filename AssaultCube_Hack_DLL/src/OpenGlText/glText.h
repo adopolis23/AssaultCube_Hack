@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <GL/gl.h>
 #include "mem.h"
-
-struct vec3 { float x, y, z; };
+#include "geometry.h"
 
 
 namespace GL
