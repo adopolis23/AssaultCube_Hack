@@ -65,8 +65,24 @@ inline bool WorldToScreen(const vec3 pos, vec3& screen, float matrix[16], int wi
 	NDC.y = clipCoords.y / clipCoords.w;
 	NDC.z = clipCoords.z / clipCoords.w;
 
-	screen.x = (windowWidth / 2 * NDC.x) + (NDC.x + windowWidth / 2);
-	screen.y = -(windowHeight / 2 * NDC.y) + (NDC.y + windowHeight / 2);
+	screen.x = (NDC.x + 1.0f) * 0.5f * windowWidth;
+	screen.y = (1.0f - NDC.y) * 0.5f * windowHeight;
+	screen.z = NDC.z;
 
 	return true;
+}
+
+inline void MultiplyMatrix(const float* a, const float* b, float* out)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			out[i + j * 4] =
+				a[0 + j * 4] * b[i + 0 * 4] +
+				a[1 + j * 4] * b[i + 1 * 4] +
+				a[2 + j * 4] * b[i + 2 * 4] +
+				a[3 + j * 4] * b[i + 3 * 4];
+		}
+	}
 }

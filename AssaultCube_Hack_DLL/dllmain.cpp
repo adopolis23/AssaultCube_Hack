@@ -23,6 +23,10 @@ DWORD pid = GetProcessIdByName(L"ac_client.exe");
 uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
 ESP esp(moduleBase);
 
+float g_View[16];
+float g_Proj[16];
+
+
 void Draw()
 {
 	HDC currentHDC = wglGetCurrentDC();
@@ -33,14 +37,13 @@ void Draw()
 	}
 
 	GL::SetupOrtho();
-	esp.Draw(espFont);
+	esp.TestDraw(espFont);
 	GL::RestoreGL();
 }
 
 //hooked wglSwapBuffers function
 BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 {
-	//printf("Hooked\n");
 
 	Draw();
 
@@ -48,6 +51,56 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	return wglSwapBuffersGateway(hDc);
 }
 
+
+
+
+// MATRIXMODE Hook
+typedef void(__stdcall* glMatrixMode_t)(GLenum mode);
+glMatrixMode_t o_glMatrixMode;
+GLenum currentMatrixMode = 0;
+
+void __stdcall hk_glMatrixMode(GLenum mode)
+{
+	currentMatrixMode = mode;
+	o_glMatrixMode(mode);
+}
+// // //
+
+
+// MULTMATRIXF Hook
+typedef void(__stdcall* glMultMatrixf_t)(const GLfloat* m);
+glMultMatrixf_t o_glMultMatrixf;
+
+void __stdcall hk_glMultMatrixf(const GLfloat* m)
+{
+	if (currentMatrixMode == GL_MODELVIEW)
+	{
+		memcpy(g_View, m, sizeof(float) * 16);
+	}
+	o_glMultMatrixf(m);
+}
+// // //
+
+
+// LOADMATRIX Hook
+typedef void(__stdcall* glLoadMatrixf_t)(const GLfloat* m);
+glLoadMatrixf_t o_glLoadMatrixf;
+
+void __stdcall hk_glLoadMatrixf(const GLfloat* m)
+{
+	// capture projection or modelview depending on matrix mode
+	if (currentMatrixMode == GL_PROJECTION)
+	{
+		memcpy(g_Proj, m, sizeof(float) * 16);
+	}
+
+	else if (currentMatrixMode == GL_MODELVIEW)
+	{
+		memcpy(g_View, m, sizeof(float) * 16);
+	}
+
+	o_glLoadMatrixf(m);
+}
 
 
 DWORD WINAPI HackThread(HMODULE hModule)
@@ -61,8 +114,15 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	{
 		return 1; // error
 	}
+	
+	//hook::Hook glLoadMatrixfHook((BYTE*)GetProcAddress(GetModuleHandleA("opengl32.dll"), "glLoadMatrixf"), (BYTE*)hk_glLoadMatrixf, (BYTE*)&o_glLoadMatrixf, 5);
+	//glLoadMatrixfHook.Enable();
 
+	//hook::Hook glMatrixModeHook((BYTE*)GetProcAddress(GetModuleHandleA("opengl32.dll"), "glMatrixMode"), (BYTE*)hk_glMatrixMode, (BYTE*)&o_glMatrixMode, 5);
+	//glMatrixModeHook.Enable();
 
+	//hook::Hook glMatrixMultfHook((BYTE*)GetProcAddress(GetModuleHandleA("opengl32.dll"), "glMultMatrixf"), (BYTE*)hk_glMultMatrixf, (BYTE*)&o_glMultMatrixf, 5);
+	//glMatrixMultfHook.Enable();
 
 	hook::Hook SwapBufferHook((BYTE*)GetProcAddress(GetModuleHandleA("opengl32.dll"), "wglSwapBuffers"), (BYTE*)hkwglSwapBuffers, (BYTE*)&wglSwapBuffersGateway, 5);
 	SwapBufferHook.Enable();

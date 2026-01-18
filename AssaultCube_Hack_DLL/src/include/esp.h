@@ -4,7 +4,7 @@
 #include "glText.h"
 #include "gameDefines.h"
 
-const int VIRTUAL_SCREEN_WIDTH = 800;
+const int VIRTUAL_SCREEN_WIDTH = 1024;
 const int GAME_UNIT_MAGIC = 400;
 
 const float PLAYER_HEIGHT = 5.25f;
@@ -36,6 +36,7 @@ public:
 
 	void DrawESPBox(Entity* ent, vec3 screen, GL::Font& font);
 	void Draw(GL::Font& font);
+	void TestDraw(GL::Font& font);
 
 private:
 	uintptr_t moduleBase;

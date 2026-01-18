@@ -140,7 +140,7 @@ int main(int argc, char** argv)
 
 	printf("DLL Injected Successfully!");
 
-	getchar();
+	//getchar();
 
 	return 0;
 }

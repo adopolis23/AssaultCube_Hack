@@ -5,7 +5,7 @@ ESP::ESP(uintptr_t moduleBase)
 {
 	this->moduleBase = moduleBase;
 
-	this->matrix = (float*)(moduleBase + 0x00192078);
+	this->matrix = (float*)(moduleBase + 0x0017DFD0);
 	//17DFFC - 192078 - 17DFF8
 	this->entityListPointer = *(EntityList**)(moduleBase + 0x0018AC04);
 	this->localPlayer = *(Entity**)(moduleBase + 0x0017E0A8);
@@ -46,15 +46,6 @@ bool ESP::IsValidEntity(Entity* ent)
 
 	return true;
 
-	//if (ent)
-	//{
-	//	if (ent->vtable == (void*)0x4e4a98 || ent->vtable == (void*)0x4E4AC0)
-	//	{
-	//		return true;
-	//	}
-	//	else return false;
-	//}
-	//else return false;
 }
 
 
@@ -104,6 +95,32 @@ void ESP::Draw(GL::Font& font)
 			{
 				DrawESPBox(ent, screenCoords, font);
 			}
+
+		}
+	}
+}
+
+void ESP::TestDraw(GL::Font& font)
+{
+
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	for (int i = 1; i < 32; i++)
+	{
+		if (IsValidEntity(this->entityListPointer->ents[i]))
+		{
+
+			Entity* ent = this->entityListPointer->ents[i];
+			vec3 headPos = ent->bodyPos;
+
+			vec3 screenCoords;
+
+			if (WorldToScreen(headPos, screenCoords, this->matrix, viewport[2], viewport[3]))
+			{
+				GL::DrawOutlinedRect(screenCoords.x, screenCoords.y, 30, 30, 2.0f, RGB::green);
+			}
+
+			
 
 		}
 	}
