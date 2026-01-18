@@ -1,4 +1,5 @@
 #pragma once
+#include <windows.h>
 #include "glDraw.h"
 #include "glText.h"
 #include "gameDefines.h"
@@ -22,7 +23,7 @@ public:
 
 	ESP(uintptr_t moduleBase);
 
-	float* matrix = (float*)(0x501AE8); // address of view matrix in memory
+	float* matrix; // address of view matrix in memory
 
 	Entity* localPlayer; // address of local player in memory
 	EntityList* entityListPointer; // address of entity list in memory

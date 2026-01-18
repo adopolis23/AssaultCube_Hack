@@ -7,7 +7,7 @@
 #include "gameDefines.h"
 #include "glText.h"
 #include "glDraw.h"
-
+#include "esp.h"
 
 //create template function type for wglSwapBuffers function
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
@@ -19,6 +19,9 @@ GL::Font espFont;
 const int espFontHeight = 15;
 const int espFontWidth = 9;
 
+DWORD pid = GetProcessIdByName(L"ac_client.exe");
+uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
+ESP esp(moduleBase);
 
 void Draw()
 {
@@ -30,7 +33,7 @@ void Draw()
 	}
 
 	GL::SetupOrtho();
-
+	esp.Draw(espFont);
 	GL::RestoreGL();
 }
 
@@ -64,10 +67,6 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	hook::Hook SwapBufferHook((BYTE*)GetProcAddress(GetModuleHandleA("opengl32.dll"), "wglSwapBuffers"), (BYTE*)hkwglSwapBuffers, (BYTE*)&wglSwapBuffersGateway, 5);
 	SwapBufferHook.Enable();
 
-
-
-	DWORD pid = GetProcessIdByName(L"ac_client.exe");
-	uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
 
 	// this address is base address of the player object
 	uintptr_t playerBaseAddress = moduleBase + 0x0017E0A8;

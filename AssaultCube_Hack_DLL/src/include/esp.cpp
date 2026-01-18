@@ -5,6 +5,8 @@ ESP::ESP(uintptr_t moduleBase)
 {
 	this->moduleBase = moduleBase;
 
+	this->matrix = (float*)(moduleBase + 0x00192078);
+	//17DFFC - 192078 - 17DFF8
 	this->entityListPointer = *(EntityList**)(moduleBase + 0x0018AC04);
 	this->localPlayer = *(Entity**)(moduleBase + 0x0017E0A8);
 }
@@ -25,9 +27,34 @@ bool ESP::IsEnemy(Entity* ent)
 
 bool ESP::IsValidEntity(Entity* ent)
 {
-	// if ent->vtable == 0x4e4a98 || 0x4e4ac0 
-	// checks if the vtable is valid
+	// need to figure out if this actually works or find better way
+	if (!ent)
+		return false;
+
+	MEMORY_BASIC_INFORMATION mbi{};
+	if (!VirtualQuery(ent, &mbi, sizeof(mbi)))
+		return false;
+
+	if (mbi.State != MEM_COMMIT)
+		return false;
+
+	if (mbi.Protect & PAGE_GUARD)
+		return false;
+
+	if (mbi.Protect & PAGE_NOACCESS)
+		return false;
+
 	return true;
+
+	//if (ent)
+	//{
+	//	if (ent->vtable == (void*)0x4e4a98 || ent->vtable == (void*)0x4E4AC0)
+	//	{
+	//		return true;
+	//	}
+	//	else return false;
+	//}
+	//else return false;
 }
 
 
@@ -62,11 +89,22 @@ void ESP::Draw(GL::Font& font)
 
 	for (int i = 1; i < 32; i++)
 	{
-		if (IsValidEntity(entityListPointer->ents[i]) && entityListPointer->ents[i] != nullptr)
+		if (IsValidEntity(this->entityListPointer->ents[i]) && this->entityListPointer->ents[i] != nullptr)
 		{
-			Entity* ent = entityListPointer->ents[i];
+			Entity* ent = this->entityListPointer->ents[i];
 
-			DrawESPBox(ent, vec3(), font);
+			vec3 center = ent->headPos;
+
+			// height adjustment to center of player model
+			center.z = center.z - (EYE_HEIGHT + PLAYER_HEIGHT / 2);
+
+			vec3 screenCoords;
+
+			if (WorldToScreen(center, screenCoords, this->matrix, viewport[2], viewport[3]))
+			{
+				DrawESPBox(ent, screenCoords, font);
+			}
+
 		}
 	}
 }

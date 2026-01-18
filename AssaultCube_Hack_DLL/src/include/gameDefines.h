@@ -22,6 +22,7 @@ public:
 class Entity
 {
 public:
+	void* vtable; //0x0000
 	Vector3 headPos; //0x0004
 	char pad_0010[24]; //0x0010
 	Vector3 bodyPos; //0x0028
@@ -37,16 +38,16 @@ public:
 	char pad_0215[347]; //0x0215 -- 347
 	class weapon* currWeaponPtr; //0x0370
 
-	virtual void Function0();
-	virtual void Function1();
-	virtual void Function2();
-	virtual void Function3();
-	virtual void Function4();
-	virtual void Function5();
-	virtual void Function6();
-	virtual void Function7();
-	virtual void Function8();
-	virtual void Function9();
+	//virtual void Function0();
+	//virtual void Function1();
+	//virtual void Function2();
+	//virtual void Function3();
+	//virtual void Function4();
+	//virtual void Function5();
+	//virtual void Function6();
+	//virtual void Function7();
+	//virtual void Function8();
+	//virtual void Function9();
 }; //Size: 0x0D68
 
 struct EntityList

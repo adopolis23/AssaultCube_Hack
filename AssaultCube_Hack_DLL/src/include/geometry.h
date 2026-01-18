@@ -16,8 +16,10 @@ struct Vector2
 };
 
 
-struct Vector3 : Vector2
+struct Vector3
 {
+	float x;
+	float y;
 	float z;
 
 	inline float Distance(const Vector3& other) const
@@ -31,6 +33,9 @@ struct Vector3 : Vector2
 
 struct Vector4 : Vector3
 {
+	float x;
+	float y;
+	float z;
 	float w;
 };
 
@@ -47,9 +52,9 @@ inline bool WorldToScreen(const vec3 pos, vec3& screen, float matrix[16], int wi
 	vec4 clipCoords;
 
 	clipCoords.x = pos.x * matrix[0] + pos.y * matrix[4] + pos.z * matrix[8] + matrix[12];
-	clipCoords.x = pos.x * matrix[1] + pos.y * matrix[5] + pos.z * matrix[9] + matrix[13];
-	clipCoords.x = pos.x * matrix[2] + pos.y * matrix[6] + pos.z * matrix[10] + matrix[14];
-	clipCoords.x = pos.x * matrix[3] + pos.y * matrix[7] + pos.z * matrix[11] + matrix[15];
+	clipCoords.y = pos.x * matrix[1] + pos.y * matrix[5] + pos.z * matrix[9] + matrix[13];
+	clipCoords.z = pos.x * matrix[2] + pos.y * matrix[6] + pos.z * matrix[10] + matrix[14];
+	clipCoords.w = pos.x * matrix[3] + pos.y * matrix[7] + pos.z * matrix[11] + matrix[15];
 
 	if (clipCoords.w < 0.1f)
 	{
