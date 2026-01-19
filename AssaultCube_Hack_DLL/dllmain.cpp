@@ -37,7 +37,7 @@ void Draw()
 	}
 
 	GL::SetupOrtho();
-	esp.TestDraw(espFont);
+	esp.Draw(espFont);
 	GL::RestoreGL();
 }
 
