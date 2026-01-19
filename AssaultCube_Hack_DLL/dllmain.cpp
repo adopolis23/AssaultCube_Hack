@@ -8,6 +8,9 @@
 #include "glText.h"
 #include "glDraw.h"
 #include "esp.h"
+#include "globals.h"
+
+Globals g_Game;
 
 //create template function type for wglSwapBuffers function
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
@@ -21,11 +24,11 @@ const int espFontWidth = 9;
 
 DWORD pid = GetProcessIdByName(L"ac_client.exe");
 uintptr_t moduleBase = GetModuleBaseAddress(pid, L"ac_client.exe");
-ESP esp(moduleBase);
+
+ESP esp;
 
 float g_View[16];
 float g_Proj[16];
-
 
 void Draw()
 {
@@ -105,6 +108,8 @@ void __stdcall hk_glLoadMatrixf(const GLfloat* m)
 
 DWORD WINAPI HackThread(HMODULE hModule)
 {
+	g_Game.Initialize((uintptr_t)moduleBase);
+
 	//create console
 	AllocConsole();
 	FILE* f;
@@ -128,9 +133,6 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	SwapBufferHook.Enable();
 
 
-	// this address is base address of the player object
-	uintptr_t playerBaseAddress = moduleBase + 0x0017E0A8;
-	Entity* localPlayer = *(Entity**)(playerBaseAddress);
 
 
 	bool bAmmoRifle = false, bHealth = false, bRecoil = false, bNoClip = false, bInvis = false;
@@ -178,11 +180,11 @@ DWORD WINAPI HackThread(HMODULE hModule)
 			bNoClip = !bNoClip;
 			if (bNoClip)
 			{
-				localPlayer->NoClip = 4;
+				g_Game.localPlayer->NoClip = 4;
 			}
 			else
 			{
-				localPlayer->NoClip = 0;
+				g_Game.localPlayer->NoClip = 0;
 			}
 		}
 
@@ -195,12 +197,12 @@ DWORD WINAPI HackThread(HMODULE hModule)
 		if (bAmmoRifle)
 		{
 
-			localPlayer->currWeaponPtr->clip->ammo = 999;
+			g_Game.localPlayer->currWeaponPtr->clip->ammo = 999;
 		}
 
 		if (bHealth)
 		{
-			localPlayer->Health = 999;
+			g_Game.localPlayer->Health = 999;
 		}
 
 		Sleep(20);

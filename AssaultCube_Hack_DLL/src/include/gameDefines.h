@@ -1,9 +1,11 @@
 #pragma once
+#include <windows.h>
+#include <tlhelp32.h>
 #include <cstdint>
 #include "geometry.h"
 
-// class defines from reclass based on structure of memory at runtime
 
+// class defines from reclass based on structure of memory at runtime
 class clip
 {
 public:
@@ -37,17 +39,6 @@ public:
 	char Name[16]; //0x0205
 	char pad_0215[347]; //0x0215 -- 347
 	class weapon* currWeaponPtr; //0x0370
-
-	//virtual void Function0();
-	//virtual void Function1();
-	//virtual void Function2();
-	//virtual void Function3();
-	//virtual void Function4();
-	//virtual void Function5();
-	//virtual void Function6();
-	//virtual void Function7();
-	//virtual void Function8();
-	//virtual void Function9();
 }; //Size: 0x0D68
 
 struct EntityList

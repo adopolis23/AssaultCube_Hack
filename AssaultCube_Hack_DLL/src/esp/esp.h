@@ -3,25 +3,14 @@
 #include "glDraw.h"
 #include "glText.h"
 #include "gameDefines.h"
-
-const int VIRTUAL_SCREEN_WIDTH = 1024;
-const int GAME_UNIT_MAGIC = 400;
-
-const float PLAYER_HEIGHT = 5.25f;
-const float PLAYER_WIDTH = 2.0f;
-const float EYE_HEIGHT = 4.5f;
-
-const float PLAYER_ASPECT_RATIO = PLAYER_HEIGHT / PLAYER_WIDTH;
-
-const int ESP_FONT_HEIGHT = 15;
-const int ESP_FONT_WIDTH = 9;
+#include "globals.h"
 
 
 class ESP
 {
 public:
 
-	ESP(uintptr_t moduleBase);
+	ESP();
 
 	float* matrix; // address of view matrix in memory
 
