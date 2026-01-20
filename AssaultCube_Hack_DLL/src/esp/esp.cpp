@@ -16,8 +16,10 @@ bool ESP::IsTeamGame()
 
 bool ESP::IsEnemy(Entity* ent)
 {
-	// need to find team pointer and check if local player team matches entity team
-	return true;
+	if (g_Game.localPlayer->Team == ent->Team)
+		return false;
+	else
+		return true;
 }
 
 bool ESP::IsValidEntity(Entity* ent)
@@ -69,6 +71,34 @@ void ESP::DrawESPBox(Entity* ent, vec3 screen, GL::Font& font)
 	font.Print(textX, textY, color, "%s", ent->Name);
 }
 
+
+void ESP::DrawESPHealthBar(Entity* ent, vec3 screen)
+{
+	int health = ent->Health;
+	int death = 100 - health;
+
+	if (health > 100) return;
+	if (death > 100) return;
+
+	const GLubyte* healthColor = RGB::green;
+	const GLubyte* deathColor = RGB::red;
+
+	float dist = g_Game.localPlayer->bodyPos.Distance(ent->bodyPos);
+	if (dist > 400) return;
+
+	float scale = (g_Game.GAME_UNIT_MAGIC / dist) * (viewport[2] / g_Game.VIRTUAL_SCREEN_WIDTH);
+
+	float width = scale * 2.0f;
+	float maxHeight = scale * g_Game.PLAYER_ASPECT_RATIO * 2.0f;
+
+	float healthScaledHeight = scale * g_Game.PLAYER_ASPECT_RATIO * 2.0f * ((float)health / 100.0);
+	float deathScaledHeight = scale * g_Game.PLAYER_ASPECT_RATIO * 2.0f * ((float)death / 100.0);
+
+	GL::DrawFilledRect(screen.x + (width/2) + 100 / dist, screen.y - healthScaledHeight + (maxHeight / 2), 100/dist, healthScaledHeight, healthColor);
+	GL::DrawFilledRect(screen.x + (width/2) + 100 / dist, screen.y - maxHeight + (maxHeight / 2), 100/dist, deathScaledHeight, deathColor);
+}
+
+
 void ESP::Draw(GL::Font& font)
 {
 	g_Game.RefreshEntityList();
@@ -96,6 +126,7 @@ void ESP::Draw(GL::Font& font)
 			if (WorldToScreen(center, screenCoords, g_Game.ViewProjectionMatrix, viewport[2], viewport[3]))
 			{
 				DrawESPBox(ent, screenCoords, font);
+				DrawESPHealthBar(ent, screenCoords);
 			}
 
 		}

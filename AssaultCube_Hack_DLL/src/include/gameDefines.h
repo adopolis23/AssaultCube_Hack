@@ -37,7 +37,9 @@ public:
 	int32_t Armor; //0x00F0
 	char pad_00F4[273]; //0x00F4
 	char Name[16]; //0x0205
-	char pad_0215[347]; //0x0215 -- 347
+	char pad[247];
+	int Team; // 0x30C
+	char pad_0215[100]; //0x0215 
 	class weapon* currWeaponPtr; //0x0370
 }; //Size: 0x0D68
 

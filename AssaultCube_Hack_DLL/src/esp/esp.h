@@ -24,6 +24,8 @@ public:
 	bool IsValidEntity(Entity* ent);
 
 	void DrawESPBox(Entity* ent, vec3 screen, GL::Font& font);
+	void DrawESPHealthBar(Entity* ent, vec3 screen);
+
 	void Draw(GL::Font& font);
 	void TestDraw(GL::Font& font);
 

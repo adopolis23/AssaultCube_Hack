@@ -147,7 +147,6 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	while (running)
 	{
 
-
 		if (GetAsyncKeyState(VK_F1) & 1) // toggle ammo rifle hack
 		{
 			bAmmoRifle = !bAmmoRifle;
