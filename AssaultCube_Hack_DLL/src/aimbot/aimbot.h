@@ -1,5 +1,6 @@
 #pragma once
 #include "globals.h"
+#include <stdio.h>
 
 namespace aimbot 
 {

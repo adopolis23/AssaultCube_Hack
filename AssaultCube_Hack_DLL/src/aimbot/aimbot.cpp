@@ -31,10 +31,13 @@ Entity* aimbot::GetBestTarget()
 		return nullptr;
 	}
 
-	for (int i = 1; i < 32; i++)
+	for (int i = 1; i < (*(globals.numBotsAddress) + *(globals.numPlayerMpAddress)); i++)
 	{
 		if (IsValidEntity(globals.entityListPointer->ents[i]) && globals.entityListPointer->ents[i] != nullptr)
 		{
+			if (globals.entityListPointer->ents[i]->Health <= 0)
+				continue;
+
 			angle = CalcAngle(globals.localPlayer->bodyPos, globals.entityListPointer->ents[i]->bodyPos);
 			
 			dist = globals.localPlayer->camAngle.Distance(angle);
@@ -59,6 +62,8 @@ void aimbot::Aimbot()
 		const Entity* ent = GetBestTarget();
 		if (!ent)
 			return;
+
+		printf("Entity name slected by aimbot is: %s\n", ent->Name);
 
 		const vec3 angle = CalcAngle(globals.localPlayer->headPos, ent->headPos);
 

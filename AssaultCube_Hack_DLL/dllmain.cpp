@@ -205,6 +205,8 @@ DWORD WINAPI HackThread(HMODULE hModule)
 			globals.localPlayer->Health = 999;
 		}
 
+		aimbot::Aimbot();
+
 		Sleep(20);
 
 	}

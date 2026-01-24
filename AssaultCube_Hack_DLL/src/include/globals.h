@@ -18,10 +18,10 @@ struct Globals
 	Entity* localPlayer;
 
 	// number of bots in the current game (not counting player)
-	uintptr_t numBotsAddress;
+	uintptr_t* numBotsAddress;
 
 	// number of total players in multiplayer game (including player)
-	uintptr_t numPlayerMpAddress;
+	uintptr_t* numPlayerMpAddress;
 
 	const int VIRTUAL_SCREEN_WIDTH = 1024;
 	const int GAME_UNIT_MAGIC = 400;
@@ -48,9 +48,9 @@ struct Globals
 
 		localPlayer = *(Entity**)(moduleBase + 0x0017E0A8);
 
-		numBotsAddress = (uintptr_t)(moduleBase + 0x00191FD4);
+		numBotsAddress = (uintptr_t*)(moduleBase + 0x00191FD4);
 
-		numPlayerMpAddress = (uintptr_t)(moduleBase + 0x001837E0);
+		numPlayerMpAddress = (uintptr_t*)(moduleBase + 0x001837E0);
 	}
 
 	inline void RefreshEntityList()
