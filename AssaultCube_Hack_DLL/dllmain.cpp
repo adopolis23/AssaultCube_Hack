@@ -9,6 +9,7 @@
 #include "glDraw.h"
 #include "esp.h"
 #include "globals.h"
+#include "aimbot.h"
 
 Globals globals;
 

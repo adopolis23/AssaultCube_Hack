@@ -28,8 +28,8 @@ public:
 	Vector3 headPos; //0x0004
 	char pad_0010[24]; //0x0010
 	Vector3 bodyPos; //0x0028
-	Vector2 camAngle; //0x0034
-	char pad_003C[58]; //0x003C
+	Vector3 camAngle; //0x0034
+	char pad_003C[54]; //0x003C
 	int8_t NoClip; //0x0076
 	int8_t Invis; //0x0077
 	char pad_0078[116]; //0x0078

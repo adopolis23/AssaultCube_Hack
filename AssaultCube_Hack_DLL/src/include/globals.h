@@ -37,7 +37,6 @@ struct Globals
 
 	const int PI = 3.14159265;
 
-
 	inline void Initialize(uintptr_t modBase)
 	{
 
