@@ -10,7 +10,7 @@
 #include "esp.h"
 #include "globals.h"
 
-Globals g_Game;
+Globals globals;
 
 //create template function type for wglSwapBuffers function
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
@@ -108,7 +108,7 @@ void __stdcall hk_glLoadMatrixf(const GLfloat* m)
 
 DWORD WINAPI HackThread(HMODULE hModule)
 {
-	g_Game.Initialize((uintptr_t)moduleBase);
+	globals.Initialize((uintptr_t)moduleBase);
 
 	//create console
 	AllocConsole();
@@ -179,11 +179,11 @@ DWORD WINAPI HackThread(HMODULE hModule)
 			bNoClip = !bNoClip;
 			if (bNoClip)
 			{
-				g_Game.localPlayer->NoClip = 4;
+				globals.localPlayer->NoClip = 4;
 			}
 			else
 			{
-				g_Game.localPlayer->NoClip = 0;
+				globals.localPlayer->NoClip = 0;
 			}
 		}
 
@@ -196,12 +196,12 @@ DWORD WINAPI HackThread(HMODULE hModule)
 		if (bAmmoRifle)
 		{
 
-			g_Game.localPlayer->currWeaponPtr->clip->ammo = 999;
+			globals.localPlayer->currWeaponPtr->clip->ammo = 999;
 		}
 
 		if (bHealth)
 		{
-			g_Game.localPlayer->Health = 999;
+			globals.localPlayer->Health = 999;
 		}
 
 		Sleep(20);

@@ -35,6 +35,8 @@ struct Globals
 	const int ESP_FONT_HEIGHT = 15;
 	const int ESP_FONT_WIDTH = 9;
 
+	const int PI = 3.14159265;
+
 
 	inline void Initialize(uintptr_t modBase)
 	{
@@ -58,4 +60,43 @@ struct Globals
 	}
 };
 
-extern Globals g_Game;
+extern Globals globals;
+
+
+
+inline bool IsTeamGame()
+{
+	// need to find game mode pointer and implement this
+	return true;
+}
+
+inline bool IsEnemy(Entity* ent)
+{
+	if (globals.localPlayer->Team == ent->Team)
+		return false;
+	else
+		return true;
+}
+
+inline bool IsValidEntity(Entity* ent)
+{
+	// need to figure out if this actually works or find better way
+	if (!ent)
+		return false;
+
+	MEMORY_BASIC_INFORMATION mbi{};
+	if (!VirtualQuery(ent, &mbi, sizeof(mbi)))
+		return false;
+
+	if (mbi.State != MEM_COMMIT)
+		return false;
+
+	if (mbi.Protect & PAGE_GUARD)
+		return false;
+
+	if (mbi.Protect & PAGE_NOACCESS)
+		return false;
+
+	return true;
+
+}
