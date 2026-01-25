@@ -31,9 +31,9 @@ Entity* aimbot::GetBestTarget()
 		return nullptr;
 	}
 
-	for (int i = 1; i < (*(globals.numBotsAddress) + *(globals.numPlayerMpAddress)); i++)
+	for (int i = 1; i <= (*(globals.numBotsAddress) + *(globals.numPlayerMpAddress)); i++)
 	{
-		if (IsValidEntity(globals.entityListPointer->ents[i]) && globals.entityListPointer->ents[i] != nullptr)
+		if (IsValidEntity(globals.entityListPointer->ents[i]) && globals.entityListPointer->ents[i] != nullptr && IsEnemy(globals.entityListPointer->ents[i]))
 		{
 			if (globals.entityListPointer->ents[i]->Health <= 0)
 				continue;
@@ -44,7 +44,7 @@ Entity* aimbot::GetBestTarget()
 
 			if (dist < bestDist)
 			{
-				bestDist = bestDist;
+				bestDist = dist;
 				target = globals.entityListPointer->ents[i];
 			}
 

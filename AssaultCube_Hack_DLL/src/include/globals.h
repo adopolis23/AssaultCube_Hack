@@ -35,7 +35,7 @@ struct Globals
 	const int ESP_FONT_HEIGHT = 15;
 	const int ESP_FONT_WIDTH = 9;
 
-	const int PI = 3.14159265;
+	const float PI = 3.14159265;
 
 	inline void Initialize(uintptr_t modBase)
 	{
